@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CsvReader
 {
@@ -16,7 +18,7 @@ namespace CsvReader
 			this.fileHelper = fileHelper;
 		}
 
-		public IEnumerable<string> GetFiles(string input, params IFileFilter<DateTime>[] filters)
+		public async Task<IEnumerable<string>> GetFiles(string input, params IFileFilter<DateTime>[] filters)
 		{
 			IEnumerable<string> rawLines = input.Split(new[] {"\n", "\r\n"}, StringSplitOptions.RemoveEmptyEntries).ToList();
 			var table = new DataTable();
@@ -32,7 +34,12 @@ namespace CsvReader
 
 			var files = table.AsEnumerable().Select(r => r.Field<string>("File Name"));
 
-			return files.Where(f => filters.All(filter => filter.IsValid(this.fileHelper.GetCreateDate(f))));
+			return files.Where(f => filters.All(filter => filter.IsValid(this.fileHelper.GetCreateDate(new FileInfo(f)))));
+		}
+
+		public async Task<IEnumerable<string>> GetFiles(FileInfo file, params IFileFilter<DateTime>[] filters)
+		{
+			return await GetFiles(this.fileHelper.ReadAllText(file), filters);
 		}
 	}
 
@@ -63,6 +70,7 @@ namespace CsvReader
 
 	public interface IFileHelper
 	{
-		DateTime GetCreateDate(string file);
+		DateTime GetCreateDate(FileInfo file);
+		string ReadAllText(FileInfo file);
 	}
 }
