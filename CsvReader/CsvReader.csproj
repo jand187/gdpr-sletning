@@ -42,6 +42,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DefaultReader.cs" />
+    <Compile Include="FileLastModifiedDateIsBeforeFilter.cs" />
+    <Compile Include="IFileFilter.cs" />
+    <Compile Include="IFileHelper.cs" />
+    <Compile Include="IReaderOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

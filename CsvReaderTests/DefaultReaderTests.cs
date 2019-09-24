@@ -98,7 +98,7 @@ namespace CsvReaderTests
 
 			var files = await target.GetFiles(
 				stringBuilder.ToString(),
-				new FileIsOlderThanFilter(DateTime.Now.FiveYearsAgo()));
+				new FileLastModifiedDateIsBeforeFilter(DateTime.Now.FiveYearsAgo()));
 
 			Assert.That(files, Contains.Item(@"C:\AIPScanner\testdoc001.docx"));
 			Assert.That(files.Count(), Is.EqualTo(1));

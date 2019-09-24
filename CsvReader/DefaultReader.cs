@@ -42,35 +42,4 @@ namespace CsvReader
 			return await GetFiles(this.fileHelper.ReadAllText(file), filters);
 		}
 	}
-
-	public interface IReaderOptions
-	{
-		bool FirstRowIsHeader { get; set; }
-	}
-
-	public class FileIsOlderThanFilter : IFileFilter<DateTime>
-	{
-		private readonly DateTime createdDate;
-
-		public FileIsOlderThanFilter(DateTime createdDate)
-		{
-			this.createdDate = createdDate;
-		}
-
-		public bool IsValid(DateTime target)
-		{
-			return this.createdDate > target;
-		}
-	}
-
-	public interface IFileFilter<TEntity>
-	{
-		bool IsValid(TEntity target);
-	}
-
-	public interface IFileHelper
-	{
-		DateTime GetCreateDate(FileInfo file);
-		string ReadAllText(FileInfo file);
-	}
 }
