@@ -20,24 +20,17 @@ namespace CsvReaderTests
 		[SetUp]
 		public void SetUp()
 		{
-			this.optionsMock = Substitute.For<IReaderOptions>();
 			this.fileHelperMock = Substitute.For<IFileHelper>();
 			this.fileDataFactoryMock = Substitute.For<IFileDataFactory>();
 			this.matchAllFilesFilterMock = Substitute.For<IFileFilter>();
 
-			this.target = new DefaultReader(this.optionsMock, this.fileHelperMock, this.fileDataFactoryMock);
+			this.target = new DefaultReader(this.fileHelperMock, this.fileDataFactoryMock);
 
 			this.matchAllFilesFilterMock.IsValid(Arg.Any<IFileData>()).Returns(true);
-			this.optionsMock.FirstRowIsHeader.Returns(true);
 		}
 
 		[Test]
-		public void GetFiles_should_call_all_filters_on_all_files()
-		{
-		}
-
-		[Test]
-		public async Task GetFiles_should_return_filtered_files()
+		public async Task GetFiles_should_call_all_filters_on_all_files()
 		{
 			var input = CreateCsvFor3Files();
 
@@ -46,7 +39,7 @@ namespace CsvReaderTests
 
 			var fileFilter2 = Substitute.For<IFileFilter>();
 			fileFilter2.IsValid(Arg.Any<IFileData>()).Returns(true);
-			
+
 			var fileFilter3 = Substitute.For<IFileFilter>();
 			fileFilter3.IsValid(Arg.Any<IFileData>()).Returns(true);
 
@@ -58,7 +51,6 @@ namespace CsvReaderTests
 
 			Assert.That(files.Count(), Is.EqualTo(3));
 		}
-
 
 		[Test]
 		public async Task GetFiles_should_read_csv_contents_and_return_file_names()
@@ -73,6 +65,16 @@ namespace CsvReaderTests
 			Assert.That(files, Contains.Item(@"C:\AIPScanner\testdoc002.docx"));
 			Assert.That(files, Contains.Item(@"C:\AIPScanner\testdoc003.docx"));
 		}
+
+		[Test]
+		public void CreateFileList_should_return_list_with_all_files()
+		{
+			var csvFile = new FileInfo($@"{TestContext.CurrentContext.TestDirectory}\Test files\Fildrev.csv");
+			var files = this.target.CreateFileSet(csvFile);
+
+			Assert.That(files.Result.Count(), Is.EqualTo(4));
+		}
+
 
 		private static string CreateCsvFor3Files()
 		{

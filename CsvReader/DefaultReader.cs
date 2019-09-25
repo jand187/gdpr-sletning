@@ -13,9 +13,11 @@ namespace CsvReader
 		private readonly IFileHelper fileHelper;
 		private readonly IReaderOptions options;
 
-		public DefaultReader(IReaderOptions options, IFileHelper fileHelper, IFileDataFactory fileDataFactoryMock)
+		public DefaultReader(IFileHelper fileHelper,
+			IFileDataFactory fileDataFactoryMock,
+			IReaderOptions options = null)
 		{
-			this.options = options;
+			this.options = options ?? new DefaultReaderOptions();
 			this.fileHelper = fileHelper;
 			this.fileDataFactoryMock = fileDataFactoryMock;
 		}
@@ -44,6 +46,19 @@ namespace CsvReader
 		public async Task<IEnumerable<string>> GetFiles(FileInfo file, params IFileFilter[] filters)
 		{
 			return await GetFiles(this.fileHelper.ReadAllText(file), filters);
+		}
+
+		public async Task<IEnumerable<ScannedFile>> CreateFileSet(FileInfo file)
+		{
+			if (!file.Exists)
+			{
+				throw new FileNotFoundException($"The file {file.FullName} was not found");
+			}
+
+			var contents = File.ReadAllText(file.FullName);
+			var rawLines = contents.Split(new[] {"\n", "\r\n"}, StringSplitOptions.RemoveEmptyEntries).Skip(1);
+
+			return rawLines.Select(r => ScannedFile.CreateFromCsvLine(r));
 		}
 	}
 }

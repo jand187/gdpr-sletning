@@ -43,6 +43,9 @@
   <ItemGroup>
     <Compile Include="DefaultReader.cs" />
     <Compile Include="FileLastModifiedDateIsBeforeFilter.cs" />
+    <Compile Include="ScannedFile.cs" />
+    <Compile Include="IFileData.cs" />
+    <Compile Include="IFileDataFactory.cs" />
     <Compile Include="IFileFilter.cs" />
     <Compile Include="IFileHelper.cs" />
     <Compile Include="IReaderOptions.cs" />

@@ -6,6 +6,8 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test files", "Test files", "{31523F01-8337-4DDE-A05B-181483C8436A}"
 	ProjectSection(SolutionItems) = preProject
 		Test files\DetailedReport_2019-09-20_12_42_38.csv = Test files\DetailedReport_2019-09-20_12_42_38.csv
+		Test files\Fildrev.csv = Test files\Fildrev.csv
+		Test files\Puls og Sharepoint.csv = Test files\Puls og Sharepoint.csv
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvReader", "CsvReader\CsvReader.csproj", "{FAF195FB-159B-43F4-B4C2-26010E4FFA8B}"
