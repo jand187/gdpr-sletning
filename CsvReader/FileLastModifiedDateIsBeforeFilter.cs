@@ -1,8 +1,9 @@
 ﻿using System;
+using System.IO;
 
 namespace CsvReader
 {
-	public class FileLastModifiedDateIsBeforeFilter : IFileFilter<DateTime>
+	public class FileLastModifiedDateIsBeforeFilter : IFileFilter
 	{
 		private readonly DateTime lastModifiedDate;
 
@@ -11,9 +12,9 @@ namespace CsvReader
 			this.lastModifiedDate = lastModifiedDate;
 		}
 
-		public bool IsValid(DateTime target)
+		public bool IsValid(IFileData file)
 		{
-			return this.lastModifiedDate > target;
+			return this.lastModifiedDate > file.LastModifiedDate;
 		}
 	}
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,119 +11,77 @@ namespace CsvReaderTests
 {
 	public class DefaultReaderTests
 	{
+		private IFileDataFactory fileDataFactoryMock;
 		private IFileHelper fileHelperMock;
+		private IFileFilter matchAllFilesFilterMock;
 		private IReaderOptions optionsMock;
+		private DefaultReader target;
 
 		[SetUp]
 		public void SetUp()
 		{
 			this.optionsMock = Substitute.For<IReaderOptions>();
 			this.fileHelperMock = Substitute.For<IFileHelper>();
-		}
+			this.fileDataFactoryMock = Substitute.For<IFileDataFactory>();
+			this.matchAllFilesFilterMock = Substitute.For<IFileFilter>();
 
-		[Test]
-		public async Task Parse_should_read_headlines()
-		{
-			var target = new DefaultReader(this.optionsMock, this.fileHelperMock);
+			this.target = new DefaultReader(this.optionsMock, this.fileHelperMock, this.fileDataFactoryMock);
 
-			//IDataReader reader = target.Parse(new StringBuilder().ToString());
-
-			var dt = new DataTable();
-		}
-
-		[Test]
-		public async Task GetFiles_should_returns_6_entries()
-		{
-			var target = new DefaultReader(this.optionsMock, this.fileHelperMock);
-
+			this.matchAllFilesFilterMock.IsValid(Arg.Any<IFileData>()).Returns(true);
 			this.optionsMock.FirstRowIsHeader.Returns(true);
-
-			var stringBuilder = new StringBuilder();
-			stringBuilder.AppendLine("Repository;File Name;Status;Comment;");
-			stringBuilder.AppendLine(@"C:\AIPScanner;C:\AIPScanner\testdoc001.docx;Success;");
-			stringBuilder.AppendLine(@"C:\AIPScanner;C:\AIPScanner\testdoc002.docx;Success;");
-			stringBuilder.AppendLine(@"C:\AIPScanner;C:\AIPScanner\testdoc003.docx;Success;");
-			stringBuilder.AppendLine(@"C:\AIPScanner;C:\AIPScanner\testdoc004.docx;Success;");
-			stringBuilder.AppendLine(@"C:\AIPScanner;C:\AIPScanner\testdoc005.docx;Success;");
-			stringBuilder.AppendLine(@"C:\AIPScanner;C:\AIPScanner\testdoc006.docx;Success;");
-
-			var files = await target.GetFiles(stringBuilder.ToString());
-
-			Assert.That(files.Count(), Is.EqualTo(6));
 		}
 
 		[Test]
-		public async Task GetFiles_should_returns_testdoc001_and_testdoc006()
+		public void GetFiles_should_call_all_filters_on_all_files()
 		{
-			var target = new DefaultReader(this.optionsMock, this.fileHelperMock);
-
-			this.optionsMock.FirstRowIsHeader.Returns(true);
-
-			var stringBuilder = new StringBuilder();
-			stringBuilder.AppendLine("Repository;File Name;Status;Comment;");
-			stringBuilder.AppendLine(@"C:\AIPScanner;C:\AIPScanner\testdoc001.docx;Success;");
-			stringBuilder.AppendLine(@"C:\AIPScanner;C:\AIPScanner\testdoc002.docx;Success;");
-			stringBuilder.AppendLine(@"C:\AIPScanner;C:\AIPScanner\testdoc003.docx;Success;");
-			stringBuilder.AppendLine(@"C:\AIPScanner;C:\AIPScanner\testdoc004.docx;Success;");
-			stringBuilder.AppendLine(@"C:\AIPScanner;C:\AIPScanner\testdoc005.docx;Success;");
-			stringBuilder.AppendLine(@"C:\AIPScanner;C:\AIPScanner\testdoc006.docx;Success;");
-
-			var files = await target.GetFiles(stringBuilder.ToString());
-
-			Assert.That(files, Contains.Item(@"C:\AIPScanner\testdoc001.docx"));
-			Assert.That(files, Contains.Item(@"C:\AIPScanner\testdoc006.docx"));
 		}
 
 		[Test]
 		public async Task GetFiles_should_return_filtered_files()
 		{
-			this.optionsMock.FirstRowIsHeader.Returns(true);
-			var target = new DefaultReader(this.optionsMock, this.fileHelperMock);
+			var input = CreateCsvFor3Files();
 
-			var stringBuilder = new StringBuilder();
-			stringBuilder.AppendLine("Repository;File Name;Status;Comment;");
-			stringBuilder.AppendLine(@"C:\AIPScanner;C:\AIPScanner\testdoc001.docx;Success;");
-			stringBuilder.AppendLine(@"C:\AIPScanner;C:\AIPScanner\testdoc002.docx;Success;");
-			stringBuilder.AppendLine(@"C:\AIPScanner;C:\AIPScanner\testdoc003.docx;Success;");
+			var fileFilter1 = Substitute.For<IFileFilter>();
+			fileFilter1.IsValid(Arg.Any<IFileData>()).Returns(true);
 
-			this.fileHelperMock.GetCreateDate(Arg.Is<FileInfo>( fi => fi.FullName == @"C:\AIPScanner\testdoc001.docx"))
-				.Returns(DateTime.Now.FiveYearsAgo().TwoDaysBefore());
+			var fileFilter2 = Substitute.For<IFileFilter>();
+			fileFilter2.IsValid(Arg.Any<IFileData>()).Returns(true);
+			
+			var fileFilter3 = Substitute.For<IFileFilter>();
+			fileFilter3.IsValid(Arg.Any<IFileData>()).Returns(true);
 
-			this.fileHelperMock.GetCreateDate(Arg.Is<FileInfo>( fi => fi.FullName == @"C:\AIPScanner\testdoc002.docx"))
-				.Returns(DateTime.Now.FiveYearsAgo());
+			var files = await this.target.GetFiles(input, fileFilter1, fileFilter2, fileFilter3);
 
-			this.fileHelperMock.GetCreateDate(Arg.Is<FileInfo>( fi => fi.FullName == @"C:\AIPScanner\testdoc003.docx"))
-				.Returns(DateTime.Now.FiveYearsAgo().TwoDaysAfter());
+			fileFilter1.Received(3).IsValid(Arg.Any<IFileData>());
+			fileFilter2.Received(3).IsValid(Arg.Any<IFileData>());
+			fileFilter3.Received(3).IsValid(Arg.Any<IFileData>());
 
-			var files = await target.GetFiles(
-				stringBuilder.ToString(),
-				new FileLastModifiedDateIsBeforeFilter(DateTime.Now.FiveYearsAgo()));
-
-			Assert.That(files, Contains.Item(@"C:\AIPScanner\testdoc001.docx"));
-			Assert.That(files.Count(), Is.EqualTo(1));
+			Assert.That(files.Count(), Is.EqualTo(3));
 		}
+
 
 		[Test]
 		public async Task GetFiles_should_read_csv_contents_and_return_file_names()
 		{
-			var csvFile = new FileInfo(@"DetailedReport_2019-09-20_12_42_38.csv");
+			var csvFile = new FileInfo(@"somedir\somefile.csv");
+			var input = CreateCsvFor3Files();
+			this.fileHelperMock.ReadAllText(csvFile).Returns(input);
 
-			this.optionsMock.FirstRowIsHeader.Returns(true);
-			var target = new DefaultReader(this.optionsMock, this.fileHelperMock);
+			var files = await this.target.GetFiles(csvFile, this.matchAllFilesFilterMock);
 
+			Assert.That(files, Contains.Item(@"C:\AIPScanner\testdoc001.docx"));
+			Assert.That(files, Contains.Item(@"C:\AIPScanner\testdoc002.docx"));
+			Assert.That(files, Contains.Item(@"C:\AIPScanner\testdoc003.docx"));
+		}
+
+		private static string CreateCsvFor3Files()
+		{
 			var stringBuilder = new StringBuilder();
 			stringBuilder.AppendLine("Repository;File Name;Status;Comment;");
 			stringBuilder.AppendLine(@"C:\AIPScanner;C:\AIPScanner\testdoc001.docx;Success;");
 			stringBuilder.AppendLine(@"C:\AIPScanner;C:\AIPScanner\testdoc002.docx;Success;");
 			stringBuilder.AppendLine(@"C:\AIPScanner;C:\AIPScanner\testdoc003.docx;Success;");
-
-			this.fileHelperMock.ReadAllText(csvFile).Returns(stringBuilder.ToString());
-
-			var files = await target.GetFiles(csvFile);
-
-			Assert.That(files, Contains.Item(@"C:\AIPScanner\testdoc001.docx"));
-			Assert.That(files, Contains.Item(@"C:\AIPScanner\testdoc002.docx"));
-			Assert.That(files, Contains.Item(@"C:\AIPScanner\testdoc003.docx"));
+			return stringBuilder.ToString();
 		}
 	}
 
