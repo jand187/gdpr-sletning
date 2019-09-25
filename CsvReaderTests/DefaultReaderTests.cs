@@ -67,12 +67,36 @@ namespace CsvReaderTests
 		}
 
 		[Test]
-		public void CreateFileList_should_return_list_with_all_files()
+		public async Task CreateFileList_should_return_list_with_all_files()
 		{
-			var csvFile = new FileInfo($@"{TestContext.CurrentContext.TestDirectory}\Test files\Fildrev.csv");
-			var files = this.target.CreateFileSet(csvFile);
+			var fileContents = new StringBuilder()
+				.AppendLine(
+					@"Repository;File Name;Status;Comment;Current Label;Current Label ID;Applied Label;Applied Label ID;Condition Name;Matched String;Information Type Name;Matched Information Types String;Action;Last Modified;Last Modified By;Protection Before Action;Protection After Action")
+				.AppendLine(
+					@"\\virinffilpf0001\Afdeling;\\virinffilpf0001\Afdeling\AIA\samsung2.pdf;Success;No conditions match for this file;Not set;;;;CPR-nummer;[CPR-nummer: XXXXXXXXXX,XXXXXX-XXXX];CPR-nummer;[CPR-nummer: XXXXXXXXXX,XXXXXX-XXXX];;2006-08-16 14:02:17Z;;false;");
 
-			Assert.That(files.Result.Count(), Is.EqualTo(4));
+			var files = await this.target.CreateFileSet(fileContents.ToString());
+
+			Assert.That(files.Single().FileName, Is.EqualTo(@"\\virinffilpf0001\Afdeling\AIA\samsung2.pdf"));
+		}
+
+		[Test]
+		public async Task ApplyFilter_should_filter_out_unmatched_files()
+		{
+			const string oldFile_name = "older than five years.pdf";
+			const string youngFile_name = "not older than five years.pdf";
+
+			var files = new[]
+			{
+				new ScannedFile {FileName = oldFile_name},
+				new ScannedFile {FileName = youngFile_name}
+			};
+
+			var filteredFiles = await this.target.ApplyFilters(
+				files,
+				new GenericFilter(f => f.FileName == oldFile_name));
+
+			Assert.That(filteredFiles.First().FileName, Is.EqualTo(oldFile_name));
 		}
 
 

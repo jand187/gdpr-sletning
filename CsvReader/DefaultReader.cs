@@ -54,11 +54,20 @@ namespace CsvReader
 			{
 				throw new FileNotFoundException($"The file {file.FullName} was not found");
 			}
-
 			var contents = File.ReadAllText(file.FullName);
-			var rawLines = contents.Split(new[] {"\n", "\r\n"}, StringSplitOptions.RemoveEmptyEntries).Skip(1);
+			return await CreateFileSet(contents);
+		}
+
+		public async Task<IEnumerable<ScannedFile>> CreateFileSet(string fileContents)
+		{
+			var rawLines = fileContents.Split(new[] {"\n", "\r\n"}, StringSplitOptions.RemoveEmptyEntries).Skip(1);
 
 			return rawLines.Select(r => ScannedFile.CreateFromCsvLine(r));
+		}
+
+		public async Task<IEnumerable<ScannedFile>> ApplyFilters(IEnumerable<ScannedFile> files, params IFileFilter[] filters)
+		{
+			return files.Where(file => filters.All(filter => filter.IsValid(file)));
 		}
 	}
 }

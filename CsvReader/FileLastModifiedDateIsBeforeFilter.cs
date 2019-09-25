@@ -16,5 +16,30 @@ namespace CsvReader
 		{
 			return this.lastModifiedDate > file.LastModifiedDate;
 		}
+
+		public bool IsValid(ScannedFile file)
+		{
+			throw new NotImplementedException();
+		}
+	}
+
+	public class GenericFilter:IFileFilter
+	{
+		private readonly Func<ScannedFile, bool> predicate;
+
+		public GenericFilter(Func<ScannedFile, bool> predicate)
+		{
+			this.predicate = predicate;
+		}
+
+		public bool IsValid(IFileData file)
+		{
+			throw new NotImplementedException();
+		}
+
+		public bool IsValid(ScannedFile file)
+		{
+			return this.predicate.Invoke(file);
+		}
 	}
 }
