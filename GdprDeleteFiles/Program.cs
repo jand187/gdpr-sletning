@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using CsvReader;
@@ -17,7 +18,7 @@ namespace GdprDeleteFiles
 			Console.WriteLine($"Command: {arguments.Command} Filename: {arguments.Filename}");
 
 			var reader = new CsvReader.DefaultReader(null,null);
-			var file = new FileInfo($@"{Environment.CurrentDirectory}\{arguments.Filename}");
+			var file = new FileInfo(arguments.Filename);
 			var createFileSetTask = reader.CreateFileSet(file);
 			createFileSetTask.Wait();
 
