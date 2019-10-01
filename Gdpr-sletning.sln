@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GdprDeleteFiles", "GdprDele
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{FA71B4FC-577E-47F9-A062-049AB28846D0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GdprDeleteFilesTests", "GdprDeleteFilesTests\GdprDeleteFilesTests.csproj", "{0B0F1823-5D57-4CC7-AC11-FF6F25F414FD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +42,10 @@ Global
 		{FA71B4FC-577E-47F9-A062-049AB28846D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA71B4FC-577E-47F9-A062-049AB28846D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA71B4FC-577E-47F9-A062-049AB28846D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B0F1823-5D57-4CC7-AC11-FF6F25F414FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B0F1823-5D57-4CC7-AC11-FF6F25F414FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B0F1823-5D57-4CC7-AC11-FF6F25F414FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B0F1823-5D57-4CC7-AC11-FF6F25F414FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

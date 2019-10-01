@@ -13,7 +13,7 @@ namespace GdprDeleteFiles
 	{
 		static void Main(string[] args)
 		{
-			var arguments = ParseArgs(args);
+			var arguments = new GdprDeleteFilesArgumentParser().Parse(args);
 
 			Console.WriteLine($"Command: {arguments.Command} Filename: {arguments.Filename}");
 
@@ -28,49 +28,16 @@ namespace GdprDeleteFiles
 
 			Console.ReadKey();
 		}
-
-		private static CsvReaderArgs ParseArgs(string[] args)
-		{
-			var command = args.First();
-			var options = args.Skip(1);
-
-			switch (command.ToLower())
-			{
-				case "show":
-
-					var index = options.ToList().IndexOf("-f");
-					var filename = options.Skip(index).Skip(1).Take(1).Single();
-
-					return new CsvReaderArgs
-					{
-						Command = command,
-						Filename = filename,
-					};
-
-				case "Delete":
-					return new CsvReaderArgs();
-
-				default:
-					Console.WriteLine("No command was found");
-					return new CsvReaderArgs();
-			}
-		}
 	}
 
-	internal class CsvReaderArgs
+	public class GdprService
 	{
-		public string Command { get; set; }
-		public string Filename { get; set; }
-	}
-
-	internal class DefaultFileHelper : IFileHelper
-	{
-		public DateTime GetCreateDate(FileInfo file)
+		public GdprService()
 		{
-			throw new NotImplementedException();
 		}
 
-		public string ReadAllText(FileInfo file)
+
+		public void DeleteFiles(IEnumerable<ScannedFile> files)
 		{
 			throw new NotImplementedException();
 		}
