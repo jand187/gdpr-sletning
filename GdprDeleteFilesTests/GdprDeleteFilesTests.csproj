@@ -55,16 +55,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CsvReader\CsvReader.csproj">
-      <Project>{FAF195FB-159B-43F4-B4C2-26010E4FFA8B}</Project>
-      <Name>CsvReader</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GdprDeleteFiles\GdprDeleteFiles.csproj">
-      <Project>{F49FC8C8-A037-4784-8B2F-63E1031239B4}</Project>
-      <Name>GdprDeleteFiles</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

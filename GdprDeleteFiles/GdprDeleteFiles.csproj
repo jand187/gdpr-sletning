@@ -51,11 +51,5 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CsvReader\CsvReader.csproj">
-      <Project>{faf195fb-159b-43f4-b4c2-26010e4ffa8b}</Project>
-      <Name>CsvReader</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
