@@ -41,6 +41,7 @@ namespace GdprService
 	public interface IFileHelper
 	{
 		void Delete(ScannedFile file);
+		string ReadAllText(string path);
 	}
 
 	public interface ILogger
