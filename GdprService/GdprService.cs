@@ -24,25 +24,25 @@ namespace GdprService
 
 		public async Task DeleteFiles(IEnumerable<ScannedFile> files)
 		{
-			await Task.Run(
-				() => files.ToList()
-					.ForEach(
-						f =>
-						{
-							try
-							{
-								this.fileHelper.Delete(f);
-								this.logger.Log($"Delete file '{f.Filename}'.");
-							}
-							catch (FileNotFoundException e)
-							{
-								this.logger.LogError(e.Message, e);
-							}
-							catch (UnauthorizedAccessException e)
-							{
-								this.logger.LogError(e.Message, e);
-							}
-						}));
+			var task = files.Select(
+				async f =>
+				{
+					try
+					{
+						await this.fileHelper.Delete(f);
+						this.logger.Log($"Delete file '{f.Filename}'.");
+					}
+					catch (FileNotFoundException e)
+					{
+						this.logger.LogError(e.Message, e);
+					}
+					catch (UnauthorizedAccessException e)
+					{
+						this.logger.LogError(e.Message, e);
+					}
+				});
+
+			await Task.WhenAll(task);
 		}
 	}
 }
