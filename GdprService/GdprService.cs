@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace GdprService
 {
 	public interface IGdprService
 	{
-		void DeleteFiles(IEnumerable<ScannedFile> files);
+		Task DeleteFiles(IEnumerable<ScannedFile> files);
 	}
 
 	public class GdprService : IGdprService
@@ -21,25 +22,26 @@ namespace GdprService
 			this.logger = logger;
 		}
 
-		public void DeleteFiles(IEnumerable<ScannedFile> files)
+		public async Task DeleteFiles(IEnumerable<ScannedFile> files)
 		{
-			files.ToList()
-				.ForEach(
-					f =>
-					{
-						try
+			await Task.Run(
+				() => files.ToList()
+					.ForEach(
+						f =>
 						{
-							this.fileHelper.Delete(f);
-						}
-						catch (FileNotFoundException e)
-						{
-							this.logger.LogError(e.Message, e);
-						}
-						catch (UnauthorizedAccessException e)
-						{
-							this.logger.LogError(e.Message, e);
-						}
-					});
+							try
+							{
+								this.fileHelper.Delete(f);
+							}
+							catch (FileNotFoundException e)
+							{
+								this.logger.LogError(e.Message, e);
+							}
+							catch (UnauthorizedAccessException e)
+							{
+								this.logger.LogError(e.Message, e);
+							}
+						}));
 		}
 	}
 }

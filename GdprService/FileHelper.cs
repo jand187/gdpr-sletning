@@ -1,14 +1,17 @@
-﻿namespace GdprService
+﻿using System.IO;
+using System.Threading.Tasks;
+
+namespace GdprService
 {
 	public interface IFileHelper
 	{
-		void Delete(ScannedFile file);
+		Task Delete(ScannedFile file);
 		string ReadAllText(string path);
 	}
 
 	public class FileHelper : IFileHelper
 	{
-		public void Delete(ScannedFile file)
+		public async Task Delete(ScannedFile file)
 		{
 			throw new System.NotImplementedException();
 		}

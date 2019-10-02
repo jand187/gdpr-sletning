@@ -1,15 +1,17 @@
-﻿namespace GdprService
+﻿using System.Threading.Tasks;
+
+namespace GdprService
 {
 	public interface IScannedFileMapper
 	{
-		ScannedFile Map(string line);
+		Task<ScannedFile> Map(string line);
 	}
 
-	internal class ScannedFileMapper : IScannedFileMapper
+	public class ScannedFileMapper : IScannedFileMapper
 	{
-		public ScannedFile Map(string line)
+		public async Task<ScannedFile> Map(string line)
 		{
-			return new ScannedFile();
+			return await Task.Run(() => new ScannedFile());
 		}
 	}
 }

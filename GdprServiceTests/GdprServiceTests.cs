@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using GdprService;
 using NSubstitute;
 using NUnit.Framework;
@@ -21,11 +22,11 @@ namespace GdprServiceTests
 		}
 
 		[Test]
-		public void DeleteFile_should_call_FileHelper_Delete()
+		public async Task DeleteFile_should_call_FileHelper_Delete()
 		{
 			var scannedFile1 = new ScannedFile();
 
-			this.gdprService.DeleteFiles(
+			await this.gdprService.DeleteFiles(
 				new[]
 				{
 					scannedFile1
@@ -35,12 +36,12 @@ namespace GdprServiceTests
 		}
 
 		[Test]
-		public void DeleteFile_should_catch_and_log_file_not_found_exception()
+		public async Task DeleteFile_should_catch_and_log_file_not_found_exception()
 		{
 			var exception = new FileNotFoundException();
 			this.fileHelper.When(fh => fh.Delete(Arg.Any<ScannedFile>())).Do(fh => throw exception);
 
-			this.gdprService.DeleteFiles(
+			await this.gdprService.DeleteFiles(
 				new[]
 				{
 					new ScannedFile()
@@ -50,12 +51,12 @@ namespace GdprServiceTests
 		}
 
 		[Test]
-		public void DeleteFile_should_catch_and_log_unauthorized_access_exception()
+		public async Task DeleteFile_should_catch_and_log_unauthorized_access_exception()
 		{
 			var exception = new UnauthorizedAccessException();
 			this.fileHelper.When(fh => fh.Delete(Arg.Any<ScannedFile>())).Do(fh => throw exception);
 
-			this.gdprService.DeleteFiles(
+			await this.gdprService.DeleteFiles(
 				new[]
 				{
 					new ScannedFile()
@@ -65,11 +66,11 @@ namespace GdprServiceTests
 		}
 
 		[Test]
-		public void DeleteFile_should_throw_exceptions()
+		public async Task DeleteFile_should_throw_exceptions()
 		{
 			this.fileHelper.When(fh => fh.Delete(Arg.Any<ScannedFile>())).Do(fh => throw new Exception());
 
-			Assert.Throws<Exception>(
+			Assert.ThrowsAsync<Exception>(
 				() => this.gdprService.DeleteFiles(
 					new[]
 					{
@@ -78,17 +79,3 @@ namespace GdprServiceTests
 		}
 	}
 }
-
-
-/*
- *
-
-	Assert.Throws<FileNotFoundException>(
-				() => this.gdprService.DeleteFiles(
-					new[]
-					{
-						scannedFile1
-					}));
-
- * 
- */

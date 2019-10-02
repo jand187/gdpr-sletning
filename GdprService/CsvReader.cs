@@ -25,9 +25,7 @@ namespace GdprService
 		{
 			var contents = this.fileHelper.ReadAllText(filename);
 			var rawLines = contents.Split(new[] {"\n", "\r\n"}, StringSplitOptions.RemoveEmptyEntries);
-
-			 return await Task.Run(
-				 () => rawLines.Skip(1).Select(line => this.scannedFileMapper.Map(line)).ToList());
+			return await Task.WhenAll(rawLines.Select(line => this.scannedFileMapper.Map(line)));
 		}
 	}
 }

@@ -23,7 +23,7 @@ namespace GdprServiceTests
 		[Test]
 		public async Task Parse_should_call_FileHelper()
 		{
-			var filename = "Somefile.csv";
+			var filename = "SomeFile.csv";
 
 			await this.target.Parse(filename);
 
@@ -33,15 +33,15 @@ namespace GdprServiceTests
 		[Test]
 		public async Task Parse_should_Return_call_ScannedFileMapper_ignoring_headers()
 		{
-			var filename = "Somefile.csv";
-			var headerline = "Repository;File Name;Status;Comment;";
+			var filename = "SomeFile.csv";
+			var headerLine = "Repository;File Name;Status;Comment;";
 			var firstLine = "some repo;my file name.txt;all-ok;nothing to see here;";
-			var contents = new StringBuilder().AppendLine(headerline).AppendLine(firstLine).ToString();
+			var contents = new StringBuilder().AppendLine(headerLine).AppendLine(firstLine).ToString();
 			this.fileHelper.ReadAllText(filename).Returns(contents);
-			
+
 			await this.target.Parse(filename);
 
-			this.scannedFileMapper.Received(1).Map(firstLine);
+			Received.InOrder(async () => await this.scannedFileMapper.Map(firstLine));
 		}
 	}
 }
