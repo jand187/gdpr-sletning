@@ -8,7 +8,7 @@ namespace GdprService
 {
 	public interface IGdprService
 	{
-		Task DeleteFiles(IEnumerable<ScannedFile> files);
+		Task DeleteFiles(IEnumerable<ScannedFile> files, IFileFilter[] filters);
 	}
 
 	public class GdprService : IGdprService
@@ -22,9 +22,11 @@ namespace GdprService
 			this.logger = logger;
 		}
 
-		public async Task DeleteFiles(IEnumerable<ScannedFile> files)
+		public async Task DeleteFiles(IEnumerable<ScannedFile> files, params IFileFilter[] filters)
 		{
-			var task = files.Select(
+			var filteredFiles = filters.Aggregate(files, (current, filter) => filter.Apply(current));
+
+			var task = filteredFiles.Select(
 				async f =>
 				{
 					try
@@ -43,6 +45,21 @@ namespace GdprService
 				});
 
 			await Task.WhenAll(task);
+		}
+	}
+
+	public class GenericFileFilter : IFileFilter
+	{
+		private readonly Func<ScannedFile, bool> predicate;
+
+		public GenericFileFilter(Func<ScannedFile, bool> predicate)
+		{
+			this.predicate = predicate;
+		}
+
+		public IEnumerable<ScannedFile> Apply(IEnumerable<ScannedFile> files)
+		{
+			return files.Where(this.predicate);
 		}
 	}
 }

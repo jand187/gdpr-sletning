@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using GdprService;
 
 namespace GdprClientConsole
@@ -26,9 +29,26 @@ namespace GdprClientConsole
 			var reader = new CsvReader(fileHelper, scannedFileMapper);
 			var files = reader.Parse($@"{Environment.CurrentDirectory}\..\..\..\Test Files\Fildrev.csv").Result;
 
-			service.DeleteFiles(files).Wait();
+			var fileExistFilter = new GdprService.GenericFileFilter(file => File.Exists(file.Filename));
+
+			service.DeleteFiles(files, fileExistFilter).Wait();
 
 			Console.ReadKey();
+		}
+	}
+
+	internal class GenericFileFilter : IFileFilter
+	{
+		private readonly Func<ScannedFile, bool> predicate;
+
+		public GenericFileFilter(Func<ScannedFile, bool> predicate)
+		{
+			this.predicate = predicate;
+		}
+
+		public IEnumerable<ScannedFile> Apply(IEnumerable<ScannedFile> files)
+		{
+			return files.Where(this.predicate);
 		}
 	}
 }

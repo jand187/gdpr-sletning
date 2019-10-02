@@ -83,7 +83,7 @@ namespace GdprServiceTests
 		{
 			var file1 = new ScannedFile
 			{
-				Filename = "File 1.txt",
+				Filename = "File 1.txt"
 			};
 
 			await this.gdprService.DeleteFiles(
@@ -95,6 +95,25 @@ namespace GdprServiceTests
 			await this.fileHelper.Received(1).Delete(file1);
 
 			this.logger.Received(1).Log($"Delete file '{file1.Filename}'.");
+		}
+
+		[Test]
+		public async Task DeleteFiles_should_apply_all_filters()
+		{
+			var scannedFiles = new[]
+			{
+				new ScannedFile
+				{
+					Filename = "File 1.txt"
+				}
+			};
+
+			var filter1 = Substitute.For<IFileFilter>();
+			var filter2 = Substitute.For<IFileFilter>();
+
+			await this.gdprService.DeleteFiles(scannedFiles, filter1, filter2);
+
+			filter1.Received(1).Apply(scannedFiles);
 		}
 	}
 }
