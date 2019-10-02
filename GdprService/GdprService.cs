@@ -5,7 +5,12 @@ using System.Linq;
 
 namespace GdprService
 {
-	public class GdprService
+	public interface IGdprService
+	{
+		void DeleteFiles(IEnumerable<ScannedFile> files);
+	}
+
+	public class GdprService : IGdprService
 	{
 		private readonly IFileHelper fileHelper;
 		private readonly ILogger logger;
@@ -28,29 +33,13 @@ namespace GdprService
 						}
 						catch (FileNotFoundException e)
 						{
-							this.logger.Log(e.Message, e);
+							this.logger.LogError(e.Message, e);
 						}
 						catch (UnauthorizedAccessException e)
 						{
-							this.logger.Log(e.Message, e);
+							this.logger.LogError(e.Message, e);
 						}
 					});
 		}
-	}
-
-	public interface IFileHelper
-	{
-		void Delete(ScannedFile file);
-		string ReadAllText(string path);
-	}
-
-	public interface ILogger
-	{
-		void Log(string message, Exception exception);
-	}
-
-	public class ScannedFile
-	{
-		public string Filename { get; set; }
 	}
 }

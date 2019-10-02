@@ -4,7 +4,12 @@ using System.Linq;
 
 namespace GdprService
 {
-	public class CsvReader
+	public interface ICsvReader
+	{
+		IEnumerable<ScannedFile> Parse(string filename);
+	}
+
+	public class CsvReader : ICsvReader
 	{
 		private readonly IFileHelper fileHelper;
 		private readonly IScannedFileMapper scannedFileMapper;

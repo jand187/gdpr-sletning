@@ -46,7 +46,7 @@ namespace GdprServiceTests
 					new ScannedFile()
 				});
 
-			this.logger.Received(1).Log(exception.Message, exception);
+			this.logger.Received(1).LogError(exception.Message, exception);
 		}
 
 		[Test]
@@ -61,7 +61,7 @@ namespace GdprServiceTests
 					new ScannedFile()
 				});
 
-			this.logger.Received(1).Log(exception.Message, exception);
+			this.logger.Received(1).LogError(exception.Message, exception);
 		}
 
 		[Test]
