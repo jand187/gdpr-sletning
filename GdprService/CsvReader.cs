@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace GdprService
 {
 	public interface ICsvReader
 	{
-		IEnumerable<ScannedFile> Parse(string filename);
+		Task<IEnumerable<ScannedFile>> Parse(string filename);
 	}
 
 	public class CsvReader : ICsvReader
@@ -20,11 +21,13 @@ namespace GdprService
 			this.scannedFileMapper = scannedFileMapper;
 		}
 
-		public IEnumerable<ScannedFile> Parse(string filename)
+		public async Task<IEnumerable<ScannedFile>> Parse(string filename)
 		{
 			var contents = this.fileHelper.ReadAllText(filename);
 			var rawLines = contents.Split(new[] {"\n", "\r\n"}, StringSplitOptions.RemoveEmptyEntries);
-			return rawLines.Skip(1).Select(line => this.scannedFileMapper.Map(line)).ToList();
+
+			 return await Task.Run(
+				 () => rawLines.Skip(1).Select(line => this.scannedFileMapper.Map(line)).ToList());
 		}
 	}
 }
