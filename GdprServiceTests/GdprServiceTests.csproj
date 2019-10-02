@@ -60,6 +60,7 @@
     <Compile Include="CsvReaderTests.cs" />
     <Compile Include="GdprServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScannedFileMapperTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

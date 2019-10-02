@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using GdprService;
 using NSubstitute;
@@ -31,15 +32,15 @@ namespace GdprServiceTests
 		}
 
 		[Test]
-		public async Task Parse_should_Return_call_ScannedFileMapper_ignoring_headers()
+		public async Task Parse_should__call_ScannedFileMapper_ignoring_headers()
 		{
-			var filename = "SomeFile.csv";
+			var csvFile = "SomeFile.csv";
 			var headerLine = "Repository;File Name;Status;Comment;";
 			var firstLine = "some repo;my file name.txt;all-ok;nothing to see here;";
 			var contents = new StringBuilder().AppendLine(headerLine).AppendLine(firstLine).ToString();
-			this.fileHelper.ReadAllText(filename).Returns(contents);
+			this.fileHelper.ReadAllText(csvFile).Returns(contents);
 
-			await this.target.Parse(filename);
+			await this.target.Parse(csvFile);
 
 			Received.InOrder(async () => await this.scannedFileMapper.Map(firstLine));
 		}
