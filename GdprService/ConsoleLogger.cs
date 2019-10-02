@@ -11,5 +11,10 @@ namespace GdprService
 				() => Console.WriteLine(
 					$"{message}{Environment.NewLine}--------------------------{Environment.NewLine}{exception}{Environment.NewLine}"));
 		}
+
+		public async void Log(string message)
+		{
+			await Task.Run(() => Console.WriteLine(message));
+		}
 	}
 }

@@ -13,12 +13,12 @@ namespace GdprService
 	{
 		public async Task Delete(ScannedFile file)
 		{
-			throw new System.NotImplementedException();
+			File.Delete(file.Filename);
 		}
 
 		public string ReadAllText(string path)
 		{
-			throw new System.NotImplementedException();
+			return File.ReadAllText(path);
 		}
 	}
 }

@@ -32,6 +32,7 @@ namespace GdprService
 							try
 							{
 								this.fileHelper.Delete(f);
+								this.logger.Log($"Delete file '{f.Filename}'.");
 							}
 							catch (FileNotFoundException e)
 							{

@@ -77,5 +77,24 @@ namespace GdprServiceTests
 						new ScannedFile()
 					}));
 		}
+
+		[Test]
+		public async Task DeleteFiles_should_log_files_deleted()
+		{
+			var file1 = new ScannedFile
+			{
+				Filename = "File 1.txt",
+			};
+
+			await this.gdprService.DeleteFiles(
+				new[]
+				{
+					file1
+				});
+
+			await this.fileHelper.Received(1).Delete(file1);
+
+			this.logger.Received(1).Log($"Delete file '{file1.Filename}'.");
+		}
 	}
 }
