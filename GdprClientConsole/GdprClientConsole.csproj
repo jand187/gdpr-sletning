@@ -43,6 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GdprDefaultCommand.cs" />
+    <Compile Include="GdprDeleteCommand.cs" />
+    <Compile Include="GdprFixShareNames.cs" />
+    <Compile Include="IGdprCommand.cs" />
+    <Compile Include="OptionsHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
