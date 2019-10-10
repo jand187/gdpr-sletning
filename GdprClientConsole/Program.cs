@@ -7,14 +7,16 @@ namespace GdprClientConsole
 {
 	internal class Program
 	{
-		private static readonly ConsoleLogger Logger;
-		private static readonly FileHelper FileHelper;
-		private static readonly ScannedFileMapper ScannedFileMapper;
+		private static readonly ILogger Logger;
+		private static readonly IFileHelper FileHelper;
+		private static readonly IFileHelper ReadOnlyFileHelper;
+		private static readonly IScannedFileMapper ScannedFileMapper;
 
 		static Program()
 		{
 			Logger = new ConsoleLogger();
-			FileHelper = new FileHelper();
+			FileHelper = new FileHelper(Logger);
+			ReadOnlyFileHelper = new ReadOnlyFileHelper(Logger);
 			ScannedFileMapper = new ScannedFileMapper();
 		}
 
@@ -22,7 +24,9 @@ namespace GdprClientConsole
 		{
 			if (!args.Any())
 			{
-				args = RequestArgs();
+				DisplayCommandLineHelp();
+				Console.ReadKey();
+				return;
 			}
 			
 			var command = CreateCommand(args);
@@ -31,10 +35,16 @@ namespace GdprClientConsole
 			Console.ReadKey();
 		}
 
+		private static void DisplayCommandLineHelp()
+		{
+			Console.WriteLine("You must specify a command.");
+		}
+
 		private static string[] RequestArgs()
 		{
-			Console.WriteLine("Whitch command do you wish to execute:");
+			Console.WriteLine("Which command do you wish to execute:");
 			Console.WriteLine("1. Delete");
+			Console.WriteLine("2. DryRun (delete)");
 			var key = Console.ReadLine();
 			Console.Clear();
 
@@ -63,8 +73,13 @@ namespace GdprClientConsole
 			switch (args[0].ToLower())
 			{
 				case "delete":
+					// delete -f "\..\..\..\Test Files\Fildrev.csv"
 					return new GdprDeleteCommand(args, Logger, FileHelper, ScannedFileMapper);
-				
+
+				case "delete-dry-run":
+					// delete-dry-run -f "\..\..\..\Test Files\Fildrev.csv"
+					return new GdprDeleteCommand(args, Logger, ReadOnlyFileHelper, ScannedFileMapper);
+
 				case "fixShareNames":
 					return new GdprFixShareNames(args, Logger);
 
