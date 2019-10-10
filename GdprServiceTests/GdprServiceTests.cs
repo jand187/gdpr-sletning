@@ -93,8 +93,6 @@ namespace GdprServiceTests
 				});
 
 			await this.fileHelper.Received(1).Delete(file1);
-
-			this.logger.Received(1).Log($"Delete file '{file1.Filename}'.");
 		}
 
 		[Test]

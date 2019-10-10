@@ -68,7 +68,6 @@ namespace GdprService
 				});
 
 			await Task.WhenAll(task);
-
 		}
 	}
 
