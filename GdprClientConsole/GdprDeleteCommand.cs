@@ -10,14 +10,14 @@ namespace GdprClientConsole
 	public class GdprDeleteCommand : IGdprCommand
 	{
 		private readonly string[] args;
-		private readonly ConsoleLogger consoleLogger;
+		private readonly ILogger consoleLogger;
 		private readonly FileInfo filename;
 		private readonly bool dryRun;
 		private readonly IFileHelper fileHelper;
 		private readonly IScannedFileMapper scannedFileMapper;
 		private readonly IEnumerable<IFileFilter> fileFilters;
 
-		public GdprDeleteCommand(string[] args, ConsoleLogger consoleLogger, IFileHelper fileHelper, IScannedFileMapper scannedFileMapper, params IFileFilter[] fileFilters)
+		public GdprDeleteCommand(string[] args, ILogger consoleLogger, IFileHelper fileHelper, IScannedFileMapper scannedFileMapper, params IFileFilter[] fileFilters)
 		{
 			this.args = args;
 			this.consoleLogger = consoleLogger;

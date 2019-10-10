@@ -6,9 +6,9 @@ namespace GdprClientConsole
 	public class GdprDefaultCommand : IGdprCommand
 	{
 		private readonly string[] args;
-		private readonly ConsoleLogger consoleLogger;
+		private readonly ILogger consoleLogger;
 
-		public GdprDefaultCommand(string[] args, ConsoleLogger consoleLogger)
+		public GdprDefaultCommand(string[] args, ILogger consoleLogger)
 		{
 			// args = delete -f "\..\..\..\Test Files\Fildrev.csv"
 			this.args = args;

@@ -7,12 +7,12 @@ namespace GdprClientConsole
 {
 	public class GdprFixShareNames : IGdprCommand
 	{
-		private readonly ConsoleLogger consoleLogger;
+		private readonly ILogger consoleLogger;
 		private readonly FileInfo file;
 		private readonly string[] args;
 		private readonly FileInfo replacementFile;
 
-		public GdprFixShareNames(string[] args, ConsoleLogger consoleLogger)
+		public GdprFixShareNames(string[] args, ILogger consoleLogger)
 		{
 			this.args = args;
 			this.consoleLogger = consoleLogger;
