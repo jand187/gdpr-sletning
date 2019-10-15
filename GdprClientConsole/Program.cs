@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using GdprService;
+using Autofac;
 
 namespace GdprClientConsole
 {
@@ -22,6 +23,18 @@ namespace GdprClientConsole
 
 		private static void Main(string[] args)
 		{
+			var container = new Bootstrapper(args).BuildContainer();
+			using (var scope = container.BeginLifetimeScope())
+			{
+				var commandFactory = scope.Resolve<ICommandFactory>();
+				var command = commandFactory.Create(args);
+				command.Execute().Wait();
+				
+				Console.ReadKey();
+			}
+
+/*
+
 			if (!args.Any())
 			{
 				DisplayCommandLineHelp();
@@ -32,6 +45,8 @@ namespace GdprClientConsole
 			var command = CreateCommand(args);
 
 			command.Execute().Wait();
+
+*/
 			Console.ReadKey();
 		}
 
@@ -86,6 +101,29 @@ namespace GdprClientConsole
 				default:
 					return new GdprDefaultCommand(args, Logger);
 			}
+		}
+	}
+
+
+	internal class Bootstrapper
+	{
+		private readonly string[] args;
+
+		public Bootstrapper(string[] args)
+		{
+			this.args = args;
+		}
+
+		public IContainer BuildContainer()
+		{
+			var builder = new ContainerBuilder();
+			builder.RegisterAssemblyTypes(this.GetType().Assembly)
+				.AsImplementedInterfaces();
+
+			builder.RegisterAssemblyTypes(typeof(GdprService.GdprService).Assembly)
+				.AsImplementedInterfaces();
+
+			return builder.Build();
 		}
 	}
 }
