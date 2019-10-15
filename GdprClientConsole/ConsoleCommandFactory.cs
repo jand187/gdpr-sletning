@@ -1,4 +1,5 @@
-﻿
+﻿using System.Collections.Generic;
+using System.Linq;
 using GdprService;
 
 namespace GdprClientConsole
@@ -10,15 +11,33 @@ namespace GdprClientConsole
 
 	internal class ConsoleCommandFactory : ICommandFactory
 	{
+		private readonly IEnumerable<IFileHelper> fileHelpers;
 		private readonly ILogger logger;
-		private readonly IFileHelper fileHelper;
-		private readonly IFileHelper readOnlyFileHelper; // TODO: JDAN remove this.
 		private readonly IScannedFileMapper scannedFileMapper;
 
-		public ConsoleCommandFactory(ILogger logger, IFileHelper fileHelper, IScannedFileMapper scannedFileMapper)
+
+		private IFileHelper FileHelper
+		{
+			get
+			{
+				return this.fileHelpers.Single(f => f.GetType() == typeof(FileHelper));
+			}
+		}
+
+		private IFileHelper ReadOnlyFileHelper
+		{
+			get
+			{
+				return this.fileHelpers.Single(f => f.GetType() == typeof(ReadOnlyFileHelper));
+			}
+		}
+
+		public ConsoleCommandFactory(ILogger logger,
+			IEnumerable<IFileHelper> fileHelpers,
+			IScannedFileMapper scannedFileMapper)
 		{
 			this.logger = logger;
-			this.fileHelper = fileHelper;
+			this.fileHelpers = fileHelpers;
 			this.scannedFileMapper = scannedFileMapper;
 		}
 
@@ -28,11 +47,11 @@ namespace GdprClientConsole
 			{
 				case "delete":
 					// delete -f "\..\..\..\Test Files\Fildrev.csv"
-					return new GdprDeleteCommand(args, this.logger, this.fileHelper, this.scannedFileMapper);
+					return new GdprDeleteCommand(args, this.logger, FileHelper, this.scannedFileMapper);
 
 				case "delete-dry-run":
 					// delete-dry-run -f "\..\..\..\Test Files\Fildrev.csv"
-					return new GdprDeleteCommand(args, this.logger, this.readOnlyFileHelper, this.scannedFileMapper);
+					return new GdprDeleteCommand(args, this.logger, ReadOnlyFileHelper, this.scannedFileMapper);
 
 				case "fixShareNames":
 					return new GdprFixShareNames(args, this.logger);
@@ -40,7 +59,6 @@ namespace GdprClientConsole
 				default:
 					return new GdprDefaultCommand(args, this.logger);
 			}
-
 		}
 	}
 }
