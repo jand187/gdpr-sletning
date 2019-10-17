@@ -11,13 +11,16 @@ namespace GdprClientConsole
 	{
 		private readonly string[] args;
 		private readonly ILogger consoleLogger;
-		private readonly FileInfo filename;
-		private readonly bool dryRun;
-		private readonly IFileHelper fileHelper;
-		private readonly IScannedFileMapper scannedFileMapper;
 		private readonly IEnumerable<IFileFilter> fileFilters;
+		private readonly IFileHelper fileHelper;
+		private readonly FileInfo filename;
+		private readonly IScannedFileMapper scannedFileMapper;
 
-		public GdprDeleteCommand(string[] args, ILogger consoleLogger, IFileHelper fileHelper, IScannedFileMapper scannedFileMapper, params IFileFilter[] fileFilters)
+		public GdprDeleteCommand(string[] args,
+			ILogger consoleLogger,
+			IFileHelper fileHelper,
+			IScannedFileMapper scannedFileMapper,
+			params IFileFilter[] fileFilters)
 		{
 			this.args = args;
 			this.consoleLogger = consoleLogger;
@@ -27,8 +30,6 @@ namespace GdprClientConsole
 
 			var filenameOption = OptionsHelper.GetOptionParameter(args, "-f");
 			this.filename = new FileInfo($"{Environment.CurrentDirectory}{filenameOption}");
-
-			this.dryRun = OptionsHelper.GetSwitch(args, "-d");
 		}
 
 		public async Task Execute()
@@ -37,19 +38,13 @@ namespace GdprClientConsole
 
 			var reader = new CsvReader(this.fileHelper, this.scannedFileMapper);
 			var files = reader.Parse(this.filename.FullName).Result.ToList();
-			this.consoleLogger.Log($"Successfully parsed csv-file '{this.filename.FullName}'. {files.Count()} entries found!");
+			this.consoleLogger.Log(
+				$"Successfully parsed csv-file '{this.filename.FullName}'. {files.Count()} entries found!");
 
 			this.consoleLogger.Log("Deleting files...");
 			var service = new GdprService.GdprService(this.fileHelper, this.consoleLogger);
 
-			if (this.dryRun)
-			{
-				await service.DeleteFilesDryRun(files, this.fileFilters.ToArray());
-			}
-			else
-			{
-				await service.DeleteFiles(files, this.fileFilters.ToArray());
-			}
+			await service.DeleteFiles(files, this.fileFilters.ToArray());
 		}
 	}
 }
