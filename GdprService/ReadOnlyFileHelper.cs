@@ -3,25 +3,18 @@ using System.Threading.Tasks;
 
 namespace GdprService
 {
-	public interface IFileHelper
-	{
-		Task Delete(ScannedFile file);
-		string ReadAllText(string path);
-	}
-
-	public class FileHelper : IFileHelper
+	public class ReadOnlyFileHelper : IFileHelper
 	{
 		private readonly ILogger logger;
 
-		public FileHelper(ILogger logger)
+		public ReadOnlyFileHelper(ILogger logger)
 		{
 			this.logger = logger;
 		}
 
 		public async Task Delete(ScannedFile file)
 		{
-			this.logger.Log($"Deleting file '{file.Filename}'.");
-			File.Delete(file.Filename);
+			this.logger.Log($"Deleting (dry-run) file '{file.Filename}'.");
 		}
 
 		public string ReadAllText(string path)
