@@ -1,6 +1,7 @@
 ﻿using System.Security;
 using System.Threading.Tasks;
 using Microsoft.SharePoint.Client;
+using File = System.IO.File;
 
 namespace GdprService
 {
@@ -50,7 +51,7 @@ namespace GdprService
 
 		public string ReadAllText(string path)
 		{
-			throw new System.NotImplementedException();
+			return File.ReadAllText(path);
 		}
 	}
 }

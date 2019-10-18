@@ -16,6 +16,8 @@ namespace GdprClientConsole
 		private readonly FileInfo filename;
 		private readonly IScannedFileMapper scannedFileMapper;
 
+		public delegate GdprDeleteCommand Factory(string[] args, IFileHelper fileHelper);
+
 		public GdprDeleteCommand(string[] args,
 			ILogger consoleLogger,
 			IFileHelper fileHelper,

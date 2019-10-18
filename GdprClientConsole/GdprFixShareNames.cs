@@ -12,6 +12,8 @@ namespace GdprClientConsole
 		private readonly string[] args;
 		private readonly FileInfo replacementFile;
 
+		public delegate GdprFixShareNames Factory(string[] args);
+
 		public GdprFixShareNames(string[] args, ILogger consoleLogger)
 		{
 			this.args = args;

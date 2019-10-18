@@ -12,9 +12,9 @@ namespace GdprClientConsole
 	internal class ConsoleCommandFactory : ICommandFactory
 	{
 		private readonly IEnumerable<IFileHelper> fileHelpers;
-		private readonly ILogger logger;
-		private readonly IScannedFileMapper scannedFileMapper;
-
+		private readonly GdprDefaultCommand.Factory gdprDefaultCommandFactory;
+		private readonly GdprDeleteCommand.Factory gdprDeleteCommandFactory;
+		private readonly GdprFixShareNames.Factory gdprFixShareNamesFactory;
 
 		private IFileHelper FileHelper
 		{
@@ -32,13 +32,15 @@ namespace GdprClientConsole
 			}
 		}
 
-		public ConsoleCommandFactory(ILogger logger,
-			IEnumerable<IFileHelper> fileHelpers,
-			IScannedFileMapper scannedFileMapper)
+		public ConsoleCommandFactory(IEnumerable<IFileHelper> fileHelpers,
+			GdprDeleteCommand.Factory gdprDeleteCommandFactory,
+			GdprFixShareNames.Factory gdprFixShareNamesFactory,
+			GdprDefaultCommand.Factory gdprDefaultCommandFactory)
 		{
-			this.logger = logger;
 			this.fileHelpers = fileHelpers;
-			this.scannedFileMapper = scannedFileMapper;
+			this.gdprDeleteCommandFactory = gdprDeleteCommandFactory;
+			this.gdprFixShareNamesFactory = gdprFixShareNamesFactory;
+			this.gdprDefaultCommandFactory = gdprDefaultCommandFactory;
 		}
 
 		public IGdprCommand Create(string[] args)
@@ -47,17 +49,17 @@ namespace GdprClientConsole
 			{
 				case "delete":
 					// delete -f "\..\..\..\Test Files\Fildrev.csv"
-					return new GdprDeleteCommand(args, this.logger, FileHelper, this.scannedFileMapper);
+					return this.gdprDeleteCommandFactory.Invoke(args, FileHelper);
 
 				case "delete-dry-run":
 					// delete-dry-run -f "\..\..\..\Test Files\Fildrev.csv"
-					return new GdprDeleteCommand(args, this.logger, ReadOnlyFileHelper, this.scannedFileMapper);
+					return this.gdprDeleteCommandFactory.Invoke(args, ReadOnlyFileHelper);
 
 				case "fixShareNames":
-					return new GdprFixShareNames(args, this.logger);
+					return this.gdprFixShareNamesFactory.Invoke(args);
 
 				default:
-					return new GdprDefaultCommand(args, this.logger);
+					return this.gdprDefaultCommandFactory.Invoke(args);
 			}
 		}
 	}

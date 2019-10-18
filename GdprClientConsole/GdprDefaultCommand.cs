@@ -8,6 +8,8 @@ namespace GdprClientConsole
 		private readonly string[] args;
 		private readonly ILogger consoleLogger;
 
+		public delegate GdprDefaultCommand Factory(string[] args);
+
 		public GdprDefaultCommand(string[] args, ILogger consoleLogger)
 		{
 			// args = delete -f "\..\..\..\Test Files\Fildrev.csv"

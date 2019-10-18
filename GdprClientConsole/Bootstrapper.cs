@@ -17,6 +17,9 @@ namespace GdprClientConsole
 			builder.RegisterAssemblyTypes(GetType().Assembly).AsImplementedInterfaces();
 
 			builder.RegisterAssemblyTypes(typeof(GdprService.GdprService).Assembly).AsImplementedInterfaces();
+			builder.RegisterType<GdprDeleteCommand>();
+			builder.RegisterType<GdprFixShareNames>();
+			builder.RegisterType<GdprDefaultCommand>();
 
 			return builder.Build();
 		}

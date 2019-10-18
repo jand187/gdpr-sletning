@@ -71,18 +71,18 @@ namespace GdprService
 		}
 	}
 
-	public class GenericFileFilter : IFileFilter
-	{
-		private readonly Func<ScannedFile, bool> predicate;
+	//public class GenericFileFilter : IFileFilter
+	//{
+	//	private readonly Func<ScannedFile, bool> predicate;
 
-		public GenericFileFilter(Func<ScannedFile, bool> predicate)
-		{
-			this.predicate = predicate;
-		}
+	//	public GenericFileFilter(Func<ScannedFile, bool> predicate = null)
+	//	{
+	//		this.predicate = predicate;
+	//	}
 
-		public IEnumerable<ScannedFile> Apply(IEnumerable<ScannedFile> files)
-		{
-			return files.Where(this.predicate);
-		}
-	}
+	//	public IEnumerable<ScannedFile> Apply(IEnumerable<ScannedFile> files)
+	//	{
+	//		return files.Where(this.predicate);
+	//	}
+	//}
 }
