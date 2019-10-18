@@ -1,7 +1,6 @@
 ﻿using System.Security;
 using System.Threading.Tasks;
 using Microsoft.SharePoint.Client;
-using File = System.IO.File;
 
 namespace GdprService
 {
@@ -11,15 +10,16 @@ namespace GdprService
 		{
 			var sharePointSiteUrl = "https://sharepoint.forca.com/sites/test";
 
-			using (ClientContext ctx = new ClientContext(sharePointSiteUrl))
+			using (var ctx = new ClientContext(sharePointSiteUrl))
 			{
-				string password = "*****";
-				string account = "user@tenant.onmicrosoft.com";
+				var password = "*****";
+				var account = "user@tenant.onmicrosoft.com";
 				var secret = new SecureString();
-				foreach (char c in password)
+				foreach (var c in password)
 				{
 					secret.AppendChar(c);
 				}
+
 				ctx.Credentials = new SharePointOnlineCredentials(account, secret);
 
 				//var mylibrary = ctx.Web.Lists.GetByTitle("Documents");
@@ -46,12 +46,9 @@ namespace GdprService
 
 				//}
 				//files.ToList().ForEach(file => file.DeleteObject());
-			};
-		}
+			}
 
-		public string ReadAllText(string path)
-		{
-			return File.ReadAllText(path);
+			;
 		}
 	}
 }

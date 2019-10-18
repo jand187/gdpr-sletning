@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace GdprService
 {
@@ -15,11 +14,6 @@ namespace GdprService
 		public async Task Delete(ScannedFile file)
 		{
 			this.logger.Log($"Deleting (dry-run) file '{file.Filename}'.");
-		}
-
-		public string ReadAllText(string path)
-		{
-			return File.ReadAllText(path);
 		}
 	}
 }

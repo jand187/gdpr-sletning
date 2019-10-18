@@ -12,13 +12,15 @@ namespace GdprServiceTests
 		private IFileHelper fileHelper;
 		private IScannedFileMapper scannedFileMapper;
 		private CsvReader target;
+		private IFileReader fileReader;
 
 		[SetUp]
 		public void Setup()
 		{
 			this.fileHelper = Substitute.For<IFileHelper>();
 			this.scannedFileMapper = Substitute.For<IScannedFileMapper>();
-			this.target = new CsvReader(this.fileHelper, this.scannedFileMapper);
+			this.fileReader = Substitute.For<IFileReader>();
+			this.target = new CsvReader(this.fileHelper, this.scannedFileMapper, this.fileReader);
 		}
 
 		[Test]
@@ -28,7 +30,7 @@ namespace GdprServiceTests
 
 			await this.target.Parse(filename);
 
-			this.fileHelper.Received(1).ReadAllText(filename);
+			this.fileReader.Received(1).ReadAllText(filename);
 		}
 
 		[Test]
@@ -38,7 +40,7 @@ namespace GdprServiceTests
 			var headerLine = "Repository;File Name;Status;Comment;";
 			var firstLine = "some repo;my file name.txt;all-ok;nothing to see here;";
 			var contents = new StringBuilder().AppendLine(headerLine).AppendLine(firstLine).ToString();
-			this.fileHelper.ReadAllText(csvFile).Returns(contents);
+			this.fileReader.ReadAllText(csvFile).Returns(contents);
 
 			await this.target.Parse(csvFile);
 

@@ -6,8 +6,8 @@ namespace GdprService
 	public interface IFileHelper
 	{
 		Task Delete(ScannedFile file);
-		string ReadAllText(string path);
 	}
+
 
 	public class FileHelper : IFileHelper
 	{
@@ -22,11 +22,6 @@ namespace GdprService
 		{
 			this.logger.Log($"Deleting file '{file.Filename}'.");
 			File.Delete(file.Filename);
-		}
-
-		public string ReadAllText(string path)
-		{
-			return File.ReadAllText(path);
 		}
 	}
 }
