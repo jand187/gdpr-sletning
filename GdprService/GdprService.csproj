@@ -96,6 +96,7 @@
     <Compile Include="ReadOnlyFileHelper.cs" />
     <Compile Include="ScannedFile.cs" />
     <Compile Include="ScannedFileMapper.cs" />
+    <Compile Include="SharePointFileHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
