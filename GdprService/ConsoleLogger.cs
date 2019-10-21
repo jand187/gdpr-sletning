@@ -7,9 +7,9 @@ namespace GdprService
 	{
 		public async void LogError(string message, Exception exception)
 		{
-			await Task.Run(
-				() => Console.WriteLine(
-					$"{message}{Environment.NewLine}--------------------------{Environment.NewLine}{exception}{Environment.NewLine}"));
+			await Task.Run(() => Console.WriteLine($"{message}"));
+
+			//$"{message}{Environment.NewLine}--------------------------{Environment.NewLine}{exception}{Environment.NewLine}"));
 		}
 
 		public async void Log(string message)

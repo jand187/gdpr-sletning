@@ -8,7 +8,6 @@ namespace GdprService
 		Task Delete(ScannedFile file);
 	}
 
-
 	public class FileHelper : IFileHelper
 	{
 		private readonly ILogger logger;

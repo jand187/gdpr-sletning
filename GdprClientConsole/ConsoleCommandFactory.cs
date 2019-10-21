@@ -49,11 +49,11 @@ namespace GdprClientConsole
 			{
 				case "delete":
 					// delete -f "\..\..\..\Test Files\Fildrev.csv"
-					return this.gdprDeleteCommandFactory.Invoke(args, FileHelper);
+					return this.gdprDeleteCommandFactory.Invoke(args);
 
 				case "delete-dry-run":
 					// delete-dry-run -f "\..\..\..\Test Files\Fildrev.csv"
-					return this.gdprDeleteCommandFactory.Invoke(args, ReadOnlyFileHelper);
+					return this.gdprDeleteCommandFactory.Invoke(args);
 
 				case "fixShareNames":
 					return this.gdprFixShareNamesFactory.Invoke(args);

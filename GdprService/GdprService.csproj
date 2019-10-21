@@ -90,6 +90,7 @@
     <Compile Include="CsvReader.cs" />
     <Compile Include="FileHelper.cs" />
     <Compile Include="FileReader.cs" />
+    <Compile Include="GdprReport.cs" />
     <Compile Include="GdprService.cs" />
     <Compile Include="IFileFilter.cs" />
     <Compile Include="IFileReader.cs" />

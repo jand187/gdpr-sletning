@@ -15,11 +15,13 @@ namespace GdprService
 	{
 		private readonly IFileHelper fileHelper;
 		private readonly ILogger logger;
+		private readonly IGdprReport gdprReport;
 
-		public GdprService(IFileHelper fileHelper, ILogger logger)
+		public GdprService(IFileHelper fileHelper, ILogger logger, IGdprReport gdprReport)
 		{
 			this.fileHelper = fileHelper;
 			this.logger = logger;
+			this.gdprReport = gdprReport;
 		}
 
 		public async Task DeleteFiles(IEnumerable<ScannedFile> files, params IFileFilter[] filters)
@@ -32,14 +34,17 @@ namespace GdprService
 					try
 					{
 						await this.fileHelper.Delete(f);
+						await this.gdprReport.RegisterDeleted(f);
 					}
 					catch (FileNotFoundException e)
 					{
 						this.logger.LogError(e.Message, e);
+						await this.gdprReport.RegisterFailed(f, e.Message);
 					}
 					catch (UnauthorizedAccessException e)
 					{
 						this.logger.LogError(e.Message, e);
+						await this.gdprReport.RegisterFailed(f, e.Message);
 					}
 				});
 

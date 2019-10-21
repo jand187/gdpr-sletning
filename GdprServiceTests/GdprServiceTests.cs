@@ -12,13 +12,15 @@ namespace GdprServiceTests
 		private IFileHelper fileHelper;
 		private GdprService.GdprService gdprService;
 		private ILogger logger;
+		private IGdprReport gdprReport;
 
 		[SetUp]
 		public void Setup()
 		{
 			this.fileHelper = Substitute.For<IFileHelper>();
 			this.logger = Substitute.For<ILogger>();
-			this.gdprService = new GdprService.GdprService(this.fileHelper, this.logger);
+			this.gdprReport = Substitute.For<IGdprReport>();
+			this.gdprService = new GdprService.GdprService(this.fileHelper, this.logger, this.gdprReport);
 		}
 
 		[Test]

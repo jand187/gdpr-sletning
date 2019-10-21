@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using GdprService;
 using Autofac;
+using GdprService;
 
 namespace GdprClientConsole
 {
@@ -14,9 +12,12 @@ namespace GdprClientConsole
 			using (var scope = container.BeginLifetimeScope())
 			{
 				var commandFactory = scope.Resolve<ICommandFactory>();
+				var report = scope.Resolve<IGdprReport>();
 				var command = commandFactory.Create(args);
 				command.Execute().Wait();
-				
+
+				Console.WriteLine();
+				Console.WriteLine(report.Results());
 				Console.ReadKey();
 			}
 		}
