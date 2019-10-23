@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Autofac;
 using GdprService;
@@ -57,12 +58,17 @@ namespace GdprClientConsole
 
 		public MoreThanFiveYearsOld()
 		{
-			this.thresholdDate = new DateTime(DateTime.Today.AddYears(-1).Year, 1, 1);
+			this.thresholdDate = new DateTime(DateTime.Today.AddYears(-5).Year, 1, 1);
 		}
 
 		public IEnumerable<ScannedFile> Apply(IEnumerable<ScannedFile> files)
 		{
 			return files.Where(f => f.LastModified < this.thresholdDate);
+		}
+
+		public bool IsAllowed(ScannedFile file)
+		{
+			return new FileInfo(file.Filename).LastWriteTime < this.thresholdDate;
 		}
 	}
 }

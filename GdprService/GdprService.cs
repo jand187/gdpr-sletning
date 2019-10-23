@@ -33,8 +33,15 @@ namespace GdprService
 				{
 					try
 					{
-						await this.fileHelper.Delete(f);
-						await this.gdprReport.RegisterDeleted(f);
+						if (filters.All(filter=>filter.IsAllowed(f)))
+						{
+							await this.fileHelper.Delete(f);
+							await this.gdprReport.RegisterDeleted(f);
+						}
+						else
+						{
+							await this.gdprReport.RegisterNotDeleted(f, "File was filtered"); //TODO: JDAN add more informative reason.
+						}
 					}
 					catch (FileNotFoundException e)
 					{
