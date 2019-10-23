@@ -5,6 +5,6 @@ namespace GdprService
 	public interface IFileFilter
 	{
 		IEnumerable<ScannedFile> Apply(IEnumerable<ScannedFile> files);
-		bool IsAllowed(ScannedFile file);
+		FilterProcessResult ProcessThisFile(ScannedFile file);
 	}
 }

@@ -19,9 +19,16 @@ namespace GdprClientConsole
 		public IContainer BuildContainer()
 		{
 			var builder = new ContainerBuilder();
-			builder.RegisterAssemblyTypes(GetType().Assembly).AsImplementedInterfaces();
+			// GdprClientConsole
+//			builder.RegisterAssemblyTypes(GetType().Assembly).AsImplementedInterfaces();
+			builder.RegisterType<ConsoleCommandFactory>().As<ICommandFactory>();
 
-			// builder.RegisterAssemblyTypes(typeof(GdprService.GdprService).Assembly).AsImplementedInterfaces();
+			builder.RegisterType<GdprDeleteCommand>();
+			builder.RegisterType<GdprFixShareNames>();
+			builder.RegisterType<GdprDefaultCommand>();
+
+
+			// GdprService
 			builder.RegisterType<CsvReader>().As<ICsvReader>();
 			builder.RegisterType<ConsoleLogger>().As<ILogger>();
 			builder.RegisterType<FileReader>().As<IFileReader>();
@@ -29,9 +36,6 @@ namespace GdprClientConsole
 			builder.RegisterType<ReadOnlyFileHelper>().As<IFileHelper>();
 			builder.RegisterType<ScannedFileMapper>().As<IScannedFileMapper>();
 
-			builder.RegisterType<GdprDeleteCommand>();
-			builder.RegisterType<GdprFixShareNames>();
-			builder.RegisterType<GdprDefaultCommand>();
 
 			builder.RegisterType<GdprReport>().As<IGdprReport>().InstancePerLifetimeScope();
 
@@ -47,12 +51,13 @@ namespace GdprClientConsole
 				case "delete":
 					builder.RegisterType<FileHelper>().As<IFileHelper>();
 					builder.RegisterType<MoreThanFiveYearsOld>().As<IFileFilter>();
+					builder.RegisterType<NotThisFileType>().As<IFileFilter>();
 					break;
 			}
 		}
 	}
 
-	internal class MoreThanFiveYearsOld : IFileFilter
+	public class MoreThanFiveYearsOld : IFileFilter
 	{
 		private readonly DateTime thresholdDate;
 
@@ -66,9 +71,26 @@ namespace GdprClientConsole
 			return files.Where(f => f.LastModified < this.thresholdDate);
 		}
 
-		public bool IsAllowed(ScannedFile file)
+		public FilterProcessResult ProcessThisFile(ScannedFile file)
 		{
-			return new FileInfo(file.Filename).LastWriteTime < this.thresholdDate;
+			return new FilterProcessResult(
+				new FileInfo(file.Filename).LastWriteTime < this.thresholdDate,
+				$"{file.Filename} is modified after {this.thresholdDate} and should not be deleted.");
+			//return new FileInfo(file.Filename).LastWriteTime < this.thresholdDate;
+		}
+	}
+
+	public class NotThisFileType : IFileFilter
+	{
+		public IEnumerable<ScannedFile> Apply(IEnumerable<ScannedFile> files)
+		{
+			return files;
+		}
+
+		public FilterProcessResult ProcessThisFile(ScannedFile file)
+		{
+			var endsWith = "d.txt";
+			return new FilterProcessResult(!file.Filename.EndsWith(endsWith), $"File ends with '{endsWith}'");
 		}
 	}
 }
