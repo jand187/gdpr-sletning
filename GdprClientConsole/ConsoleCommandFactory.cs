@@ -55,6 +55,10 @@ namespace GdprClientConsole
 					// delete-dry-run -f "\..\..\..\Test Files\Fildrev.csv"
 					return this.gdprDeleteCommandFactory.Invoke(args);
 
+				case "delete-sharepoint":
+					// delete-dry-run -f "\..\..\..\Test Files\Fildrev.csv"
+					return this.gdprDeleteCommandFactory.Invoke(args);
+
 				case "fixShareNames":
 					return this.gdprFixShareNamesFactory.Invoke(args);
 

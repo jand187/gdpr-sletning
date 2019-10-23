@@ -53,6 +53,10 @@ namespace GdprClientConsole
 					builder.RegisterType<MoreThanFiveYearsOld>().As<IFileFilter>();
 					builder.RegisterType<NotThisFileType>().As<IFileFilter>();
 					break;
+				case "delete-sharepoint":
+					builder.RegisterType<SharePointFileHelper>().As<IFileHelper>();
+					break;
+
 			}
 		}
 	}
