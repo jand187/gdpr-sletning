@@ -75,8 +75,8 @@ namespace GdprClientConsole
 		{
 			return new FilterProcessResult(
 				new FileInfo(file.Filename).LastWriteTime < this.thresholdDate,
-				$"{file.Filename} is modified after {this.thresholdDate} and should not be deleted.");
-			//return new FileInfo(file.Filename).LastWriteTime < this.thresholdDate;
+				$"{file.Filename} is modified after {this.thresholdDate} and should not be deleted.",
+				file);
 		}
 	}
 
@@ -90,7 +90,7 @@ namespace GdprClientConsole
 		public FilterProcessResult ProcessThisFile(ScannedFile file)
 		{
 			var endsWith = "d.txt";
-			return new FilterProcessResult(!file.Filename.EndsWith(endsWith), $"File ends with '{endsWith}'");
+			return new FilterProcessResult(!file.Filename.EndsWith(endsWith), $"File ends with '{endsWith}'", file);
 		}
 	}
 }
