@@ -51,7 +51,6 @@ namespace GdprClientConsole
 				case "delete":
 					builder.RegisterType<FileHelper>().As<IFileHelper>();
 					builder.RegisterType<MoreThanFiveYearsOld>().As<IFileFilter>();
-					builder.RegisterType<NotThisFileType>().As<IFileFilter>();
 					break;
 				case "delete-sharepoint":
 					builder.RegisterType<SharePointFileHelper>().As<IFileHelper>();
@@ -81,20 +80,6 @@ namespace GdprClientConsole
 				new FileInfo(file.Filename).LastWriteTime < this.thresholdDate,
 				$"{file.Filename} is modified after {this.thresholdDate} and should not be deleted.",
 				file);
-		}
-	}
-
-	public class NotThisFileType : IFileFilter
-	{
-		public IEnumerable<ScannedFile> Apply(IEnumerable<ScannedFile> files)
-		{
-			return files;
-		}
-
-		public FilterProcessResult ProcessThisFile(ScannedFile file)
-		{
-			var endsWith = "d.txt";
-			return new FilterProcessResult(!file.Filename.EndsWith(endsWith), $"File ends with '{endsWith}'", file);
 		}
 	}
 }

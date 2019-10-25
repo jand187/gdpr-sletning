@@ -13,11 +13,20 @@ namespace GdprClientConsole
 			{
 				var commandFactory = scope.Resolve<ICommandFactory>();
 				var report = scope.Resolve<IGdprReport>();
-				var command = commandFactory.Create(args);
-				command.Execute().Wait();
 
-				Console.WriteLine();
-				Console.WriteLine(report.Results());
+				try
+				{
+					var command = commandFactory.Create(args);
+					command.Execute().Wait();
+				}
+				catch (Exception e)
+				{
+					Console.WriteLine();
+					Console.WriteLine(report.Results());
+					Console.WriteLine(e);
+					throw;
+				}
+
 				Console.ReadKey();
 			}
 		}
