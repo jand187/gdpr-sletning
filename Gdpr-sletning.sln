@@ -8,6 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test files", "Test files", 
 		Test files\DetailedReport_2019-09-20_12_42_38.csv = Test files\DetailedReport_2019-09-20_12_42_38.csv
 		Test files\Fildrev.csv = Test files\Fildrev.csv
 		Test files\Puls og Sharepoint.csv = Test files\Puls og Sharepoint.csv
+		Test files\Test-run-filessystem.csv = Test files\Test-run-filessystem.csv
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GdprService", "GdprService\GdprService.csproj", "{6DA2775B-CC64-40C5-8DF0-2E43572C5F73}"
