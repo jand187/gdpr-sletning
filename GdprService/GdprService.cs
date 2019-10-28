@@ -49,12 +49,12 @@ namespace GdprService
 					catch (FileNotFoundException e)
 					{
 						this.logger.LogError(e.Message, e);
-						await this.gdprReport.RegisterFailed(f, e.Message);
+						await this.gdprReport.RegisterFailed(f, $"{f.Filename} File not Found.");
 					}
 					catch (UnauthorizedAccessException e)
 					{
 						this.logger.LogError(e.Message, e);
-						await this.gdprReport.RegisterFailed(f, e.Message);
+						await this.gdprReport.RegisterFailed(f, $"{f.Filename} Access Denied.");
 					}
 				});
 

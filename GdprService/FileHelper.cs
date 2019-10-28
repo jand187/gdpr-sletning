@@ -20,6 +20,10 @@ namespace GdprService
 		public async Task Delete(ScannedFile file)
 		{
 			this.logger.Log($"Deleting file '{file.Filename}'.");
+			if (!File.Exists(file.Filename))
+			{
+				throw new FileNotFoundException("File not found", file.Filename);
+			}
 			File.Delete(file.Filename);
 		}
 	}
