@@ -17,4 +17,16 @@ namespace GdprService
 			await Task.Run(() => Console.WriteLine(message));
 		}
 	}
+
+	public class SilentLogger : ILogger
+	{
+		public async void LogError(string message, Exception exception)
+		{
+		}
+
+		public async void Log(string message)
+		{
+		}
+	}
+
 }

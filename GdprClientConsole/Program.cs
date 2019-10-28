@@ -22,9 +22,12 @@ namespace GdprClientConsole
 				catch (Exception e)
 				{
 					Console.WriteLine();
-					Console.WriteLine(report.Results());
 					Console.WriteLine(e);
 					throw;
+				}
+				finally
+				{
+					Console.WriteLine(report.Results());
 				}
 
 				Console.ReadKey();

@@ -30,7 +30,7 @@ namespace GdprClientConsole
 
 			// GdprService
 			builder.RegisterType<CsvReader>().As<ICsvReader>();
-			builder.RegisterType<ConsoleLogger>().As<ILogger>();
+			builder.RegisterType<SilentLogger>().As<ILogger>();
 			builder.RegisterType<FileReader>().As<IFileReader>();
 			builder.RegisterType<GdprService.GdprService>().As<IGdprService>();
 			builder.RegisterType<ReadOnlyFileHelper>().As<IFileHelper>();
