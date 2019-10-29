@@ -60,29 +60,5 @@ namespace GdprService
 
 			await Task.WhenAll(task);
 		}
-
-		//public async Task DeleteFilesDryRun(IEnumerable<ScannedFile> files, params IFileFilter[] filters)
-		//{
-		//	var filteredFiles = filters.Aggregate(files, (current, filter) => filter.Apply(current));
-
-		//	var task = filteredFiles.Select(
-		//		async f =>
-		//		{
-		//			try
-		//			{
-		//				this.logger.Log($"Delete file '{f.Filename}'.");
-		//			}
-		//			catch (FileNotFoundException e)
-		//			{
-		//				this.logger.LogError(e.Message, e);
-		//			}
-		//			catch (UnauthorizedAccessException e)
-		//			{
-		//				this.logger.LogError(e.Message, e);
-		//			}
-		//		});
-
-		//	await Task.WhenAll(task);
-		//}
 	}
 }
