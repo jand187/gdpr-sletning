@@ -52,6 +52,7 @@
     <Compile Include="GdprDeleteCommand.cs" />
     <Compile Include="GdprFixShareNames.cs" />
     <Compile Include="IGdprCommand.cs" />
+    <Compile Include="MoreThanFiveYearsOld.cs" />
     <Compile Include="OptionsHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
