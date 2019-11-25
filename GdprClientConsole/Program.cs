@@ -23,7 +23,6 @@ namespace GdprClientConsole
 				{
 					Console.WriteLine();
 					Console.WriteLine(e);
-					throw;
 				}
 				finally
 				{

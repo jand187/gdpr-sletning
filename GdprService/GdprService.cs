@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using Microsoft.SharePoint.Client;
 
 namespace GdprService
 {
@@ -43,7 +45,11 @@ namespace GdprService
 						{
 							await this.gdprReport.RegisterNotDeleted(
 								f,
-								 string.Join(Environment.NewLine, allFiltersStatus.Select(filterStatus => filterStatus.Reason))); //TODO: JDAN add more informative reason.
+								string.Join(
+									Environment.NewLine,
+									allFiltersStatus.Select(
+										filterStatus =>
+											filterStatus.Reason))); //TODO: JDAN add more informative reason.
 						}
 					}
 					catch (FileNotFoundException e)
@@ -55,6 +61,16 @@ namespace GdprService
 					{
 						this.logger.LogError(e.Message, e);
 						await this.gdprReport.RegisterFailed(f, $"{f.Filename} Access Denied.");
+					}
+					catch (WebException e)
+					{
+						this.logger.LogError(e.Message, e);
+						await this.gdprReport.RegisterFailed(f, $"{f.Filename} Unauthorized access.");
+					}
+					catch (ServerUnauthorizedAccessException e)
+					{
+						this.logger.LogError(e.Message, e);
+						await this.gdprReport.RegisterFailed(f, $"{f.Filename} Unauthorized access.");
 					}
 				});
 
