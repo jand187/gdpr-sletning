@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using Autofac;
 using GdprService;
 
@@ -59,6 +56,7 @@ namespace GdprClientConsole
 
 				case "delete-sharepoint":
 					builder.RegisterType<SharePointFileHelper>().As<IFileHelper>();
+					builder.RegisterType<MoreThanFiveYearsOldSharePoint>().As<IFileFilter>();
 					break;
 
 			}
