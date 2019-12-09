@@ -29,14 +29,17 @@ namespace GdprService
 			var scannedFile = new ScannedFile
 			{
 				Repository = fields[(int) CsvFields.Repository],
-				Filename = fields[(int) CsvFields.FileName],
+				Filename = fields[(int) CsvFields.FileName].Replace(@"""", ""),
 				Status = fields[(int) CsvFields.Status],
-				Comment = fields[(int) CsvFields.Comment]
+				Comment = fields[(int) CsvFields.Comment],
+				AppliedLabel = fields[(int) CsvFields.AppliedLabel],
+				InformationTypeName = fields[(int) CsvFields.InformationTypeName],
 			};
+
 			var dateField = fields[(int) CsvFields.LastModified];
-			if (DateTime.TryParse(dateField, out var result))
+			if (DateTime.TryParse(dateField, out var dateFieldOut))
 			{
-				scannedFile.LastModified = result;
+				scannedFile.LastModified = dateFieldOut;
 			}
 			else
 			{

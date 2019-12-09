@@ -9,5 +9,7 @@ namespace GdprService
 		public string Status { get; set; }
 		public string Comment { get; set; }
 		public DateTime LastModified { get; set; }
+		public string AppliedLabel { get; set; }
+		public string InformationTypeName { get; set; }
 	}
 }
