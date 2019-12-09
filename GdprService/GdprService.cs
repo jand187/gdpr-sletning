@@ -57,6 +57,11 @@ namespace GdprService
 						this.logger.LogError(e.Message, e);
 						await this.gdprReport.RegisterFailed(f, $"{f.Filename} File not Found.");
 					}
+					catch (ArgumentException e)
+					{
+						this.logger.LogError(e.Message, e);
+						await this.gdprReport.RegisterFailed(f, $"{f.Filename}: ArgumentException: {e.Message}.");
+					}
 					catch (UnauthorizedAccessException e)
 					{
 						this.logger.LogError(e.Message, e);

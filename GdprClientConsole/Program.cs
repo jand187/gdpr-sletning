@@ -8,6 +8,8 @@ namespace GdprClientConsole
 	{
 		private static void Main(string[] args)
 		{
+			Console.WriteLine($"GDPR deletion job started: {DateTime.Now}");
+
 			var container = new Bootstrapper(args).BuildContainer();
 			using (var scope = container.BeginLifetimeScope())
 			{
@@ -29,6 +31,7 @@ namespace GdprClientConsole
 					Console.WriteLine(report.Results());
 				}
 
+				Console.WriteLine("Done! Press key to exit.");
 				Console.ReadKey();
 			}
 		}
