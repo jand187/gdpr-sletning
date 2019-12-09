@@ -47,15 +47,20 @@ namespace GdprClientConsole
 			{
 				case "delete":
 					builder.RegisterType<FileHelper>().As<IFileHelper>();
+
+					builder.RegisterType<IsMarkedForDeletion>().As<IFileFilter>();
 					builder.RegisterType<MoreThanFiveYearsOld>().As<IFileFilter>();
 					break;
 
 				case "delete-dry-run":
+					builder.RegisterType<IsMarkedForDeletion>().As<IFileFilter>();
 					builder.RegisterType<MoreThanFiveYearsOld>().As<IFileFilter>();
 					break;
 
 				case "delete-sharepoint":
 					builder.RegisterType<SharePointFileHelper>().As<IFileHelper>();
+					
+					builder.RegisterType<IsMarkedForDeletion>().As<IFileFilter>();
 					builder.RegisterType<MoreThanFiveYearsOldSharePoint>().As<IFileFilter>();
 					break;
 
